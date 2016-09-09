@@ -9,7 +9,7 @@ services:
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -qq flex bison bc git svn bzr cvs hg wget ftp
+  - sudo apt-get install -qq flex bison bc git subversion subversion bzr mercurial wget ftp
   - BR_VER=`cat "rootfs/config" | grep "Buildroot.*Configuration" | awk '{print $3}'`
   - wget -qO- "https://buildroot.org/downloads/buildroot-$BR_VER.tar.gz" | tar xz
   - cp "rootfs/config" "buildroot-$BR_VER/.config"
