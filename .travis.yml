@@ -1,0 +1,34 @@
+language: c
+
+env:
+  global:
+    - COMMIT=${TRAVIS_COMMIT::8}
+
+services:
+  - docker
+
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq flex bison bc git svn bzr cvs hg wget ftp
+  - BR_VER=`cat "rootfs/config" | grep "Buildroot.*Configuration" | awk '{print $3}'`
+  - wget -qO- "https://buildroot.org/downloads/buildroot-$BR_VER.tar.gz" | tar xz
+  - cp "rootfs/config" "buildroot-$BR_VER/.config"
+  - cd "buildroot-$BR_VER"
+  - make oldconfig
+  - make --quite
+  - cp output/images/rootfs.tar ../
+  - cd ..
+  - export REPO=wangkexiong/python
+
+install:
+  - docker build -t $REPO:$COMMIT .
+
+script:
+  - docker run -t $REPO:$COMMIT python --version
+
+after_success:
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
+  - docker tag $REPO:$COMMIT $REPO:$TAG
+  - docker push $REPO:$TAG
+
