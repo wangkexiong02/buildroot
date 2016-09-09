@@ -18,6 +18,7 @@ before_install:
   - make --quiet
   - cp output/images/rootfs.tar ../
   - cd ..
+  - ls -al rootfs.tar
   - export REPO=wangkexiong/python
 
 install:
