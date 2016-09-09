@@ -15,7 +15,7 @@ before_install:
   - cp "rootfs/config" "buildroot-$BR_VER/.config"
   - cd "buildroot-$BR_VER"
   - make oldconfig
-  - make --quiet
+  - make -j8 --quiet
   - cp output/images/rootfs.tar ../
   - cd ..
   - ls -al rootfs.tar
