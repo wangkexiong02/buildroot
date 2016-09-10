@@ -8,8 +8,6 @@ services:
   - docker
 
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq flex bison bc git subversion subversion bzr mercurial wget ftp
   - BR_VER=`cat "rootfs/config" | grep "Buildroot.*Configuration" | awk '{print $3}'`
   - BD_BASE=$PWD
   - cd /opt
@@ -17,7 +15,7 @@ before_install:
   - cp "$BD_BASE/rootfs/config" "buildroot-$BR_VER/.config"
   - cd "buildroot-$BR_VER"
   - make oldconfig
-  - make
+  - make --quiet
   - cp output/images/rootfs.tar $BD_BASE/.
   - cd $BD_BASE
   - ls -al rootfs.tar
@@ -34,4 +32,3 @@ after_success:
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
   - docker tag $REPO:$COMMIT $REPO:$TAG
   - docker push $REPO:$TAG
-
